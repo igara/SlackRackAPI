@@ -58,17 +58,22 @@ def get_channel_list_action(request):
                             "profile":{
                                 "image_24":get_profile_image(members, channels['message_user'])[0],
                                 "image_32":get_profile_image(members, channels['message_user'])[1],
-                                "image_48":get_profile_image(members, channels['message_user'])[2],
-                                "image_72":get_profile_image(members, channels['message_user'])[3],
-                                "image_192":get_profile_image(members, channels['message_user'])[4],
-                                "image_original":get_profile_image(members, channels['message_user'])[5]},
+                                "image_48":get_profile_image(members, channels['message_user'])[2],},
                             "user_name":user_info['user_name'],
                             "text":channels['message_text'],
                             "ts":channels['message_time_stamp']})
         except ObjectDoesNotExist:
-            message.append({"user_id":channels['message_user'],
-                            "text":channels['message_text'],
-                            "ts":channels['message_time_stamp']})
+            if 'B093X6DRV' == channels['message_user']:
+                message.append({"user_id":channels['message_user'],
+                                "profile":{
+                                    "image_48":'https://slack.global.ssl.fastly.net/5721/plugins/github/assets/bot_48.png',},
+                                "user_name":'github',
+                                "text":channels['message_text'],
+                                "ts":channels['message_time_stamp']})
+            else:
+                message.append({"user_id":channels['message_user'],
+                                "text":channels['message_text'],
+                                "ts":channels['message_time_stamp']})
     return JsonResponse({"message":message})
 
 def get_channel_list_json_action(request):
@@ -94,7 +99,4 @@ def get_profile_image(apiJson, userId):
         if member['id'] == userId:
             return (member['profile']['image_24'],
                     member['profile']['image_32'],
-                    member['profile']['image_48'],
-                    member['profile']['image_72'],
-                    member['profile']['image_192'],
-                    member['profile']['image_original'])
+                    member['profile']['image_48'])
